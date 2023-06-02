@@ -121,7 +121,7 @@ def city_finder(city: str) -> str:
 #   say function: A text-to-speech function built with pyttsx3:
 def say(text: str):
     engine = pyttsx3.init()
-    engine.say(f"It is {text} in {city_name}.")
+    engine.say(f"It is {text} in {city_name.replace('*', '')}.")
     engine.runAndWait()
 
 
