@@ -12,11 +12,10 @@ from requests.exceptions import (
 )
 import pyttsx3
 import argparse
-import re
 
 
 def main():
-    timenow("Bucharest")
+    print(timenow("Bucharest"))
 
 
 def timenow(city: str) -> str:
@@ -25,21 +24,30 @@ def timenow(city: str) -> str:
         response = requests.get(url)
         html_content = response.text
         soup = BeautifulSoup(html_content, "lxml")
-
+        tags = soup.find_all("td")
+        cities = list()
+        times = list()
+        for tag in tags:
+            if tags.index(tag) % 2 == 0:
+                cities.append(tag.text)
+            else:
+                times.append(tag.text)
+        worldclock = {key: value for key, value in zip(cities, times)}
+        return worldclock[city]
+#        for key, value in worldclock.items():
+#            print(f"{key} - {value}")
 
     #   ERROR HANDLING
     except HTTPError as e:
-        sys.exit("HTTP error occurred:", e)
+        sys.exit("❌ HTTP error occurred:", e)
     except ConnectionError as e:
-        sys.exit("Network connection error occurred:", e)
+        sys.exit("❌ Network connection error occurred:", e)
     except Timeout as e:
-        sys.exit("Timeout error occurred:", e)
+        sys.exit("❌ Timeout error occurred:", e)
     except TooManyRedirects as e:
-        sys.exit("Too many redirects occurred:", e)
+        sys.exit("❌ Too many redirects occurred:", e)
     except RequestException as e:
-        sys.exit("An error occurred:", e)
-
-
+        sys.exit("❌ An error occurred:", e)
 
 
 if __name__ == "__main__":
