@@ -15,7 +15,7 @@ import argparse
 
 
 def main():
-    print(timenow("Bucharest"))
+    print(timenow("bucharest"))
 
 
 def timenow(city: str) -> str:
@@ -34,7 +34,7 @@ def timenow(city: str) -> str:
                 times.append(tag.text)
         worldclock = {key: value for key, value in zip(cities, times)}
         for key, value in worldclock.items():
-            if city in key:
+            if city.capitalize() in key:
                 return value
 
     #   ERROR HANDLING
