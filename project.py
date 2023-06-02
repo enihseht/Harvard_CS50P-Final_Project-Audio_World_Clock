@@ -76,40 +76,46 @@ def timenow(city: str) -> str:
     if not final_key:
         final_key = city_finder(city.capitalize())
         if final_key:
-            return tmp_dict(final_key).split(" ")[1]
+            return tmp_dict[final_key].split(" ")[1]
         else:
             sys.exit("❌ City Not Found!")
     else:
         return tmp_dict[final_key].split(" ")[1]
 
 
-        
-def city_finder(user_input: str) -> str:
+# FIXME: This function is not working properly
+def city_finder(city: str) -> str:
     tmp_dict = dictmaker()
-    result = ""
-    tmp_key_letters = list()
-    tmp_user_input_letters = list()
-    for letter in user_input.capitalize():
-        tmp_user_input_letters.append(letter)
-#    score = 0
-    for key, _ in tmp_dict:
-        if result:
-            return result
-            break
-        else:
-            for letter in key:
-                tmp_key_letters.append(letter)
-            if tmp_key_letters[0] == tmp_user_input_letters[0] and tmp_key_letters[1] == tmp_user_input_letters[1] and tmp_key_letters[2] == tmp_user_input_letters[2]:
-                result = "".join(tmp_key_letters)
-                answer = input(f"Did You Mean {result}?")
-                if answer.lower() in ["yes", "y", "yup", "yeah"]:
-                    result = "".join(tmp_key_letters)
-                    break
-                else:
-                    sys.exit("Please Try Again!")
+    letters_real = list()
+    found_city = ""
+    letters_city = list()
+    for letter in city.lower():
+        letters_city.append(letter)
+    letters_city = list(
+        filter(lambda letter: letter not in ["a", "e", "o", "u", "i"], letters_city)
+    )
+    for key, _ in tmp_dict.items():
+        letters_real = []
+        for letter in key.lower():
+            letters_real.append(letter)
+        letters_real = list(
+            filter(
+                lambda letter: letter not in ["a", "e", "o", "u", "i", "*"],
+                letters_real,
+            )
+        )
+        common = len(set(letters_real).intersection(set(letters_city)))
+        #        print(f"Real: {letters_real}\nCity: {letters_city}\nCommon: {common}\n Percent: {common / len(letters_real) * 10}")
+        if (common / len(letters_real)) * 10 > 7:
+            answer = input(f"Did you mean {key.capitalize()}?    y/n   ")
+            if answer in ["yes", "y", "yeah", "yup"]:
+                found_city = key
+                break
             else:
-                continue   
-    return result
+                continue
+    global city_name
+    city_name = found_city
+    return found_city
 
 
 #   say function: A text-to-speech function built with pyttsx3:
