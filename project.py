@@ -33,9 +33,9 @@ def timenow(city: str) -> str:
             else:
                 times.append(tag.text)
         worldclock = {key: value for key, value in zip(cities, times)}
-        return worldclock[city]
-#        for key, value in worldclock.items():
-#            print(f"{key} - {value}")
+        for key, value in worldclock.items():
+            if city in key:
+                return value
 
     #   ERROR HANDLING
     except HTTPError as e:
