@@ -1,0 +1,20 @@
+beautifulsoup4 4.12.2 
+pip install beautifulsoup4
+
+lxml 4.9.2 
+pip install lxml
+
+requests 2.31.0
+pip install requests
+
+pyttsx3 2.90
+pip install pyttsx3
+
+argparse3 0.0.0
+pip install argparse3
+
+pyfiglet 0.8.post1
+pip install pyfiglet
+
+pytest123 0.0.1
+pip install pytest123
