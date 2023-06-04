@@ -32,11 +32,12 @@ import pyfiglet
 #   the main function needs to arguments which are sound and city. If sound argument exists, it will have an audio output as well.
 def main(sound, city):
     #   city_name and city_time are global variables so that they can be accessed by our functions and to be changed later on.
-    global city_name, city_time
+    global city_name, city_time, final_text
     city_name = city.capitalize()
     if city:
         try:
             city_time = timenow(city)
+            final_text = f"It is {city_time} in {city_name.replace('*', '')}."
         except ValueError:
             sys.exit("❌ Invalid City Name.")
     else:
@@ -50,10 +51,30 @@ def main(sound, city):
             sys.exit("❌ Invalid City Name.")
 
 
+def reqcheck(url):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    #   ERROR HANDLING
+    except HTTPError as e:
+        sys.exit("❌ HTTP error occurred:", e)
+    except ConnectionError as e:
+        sys.exit("❌ Network connection error occurred:", e)
+    except Timeout as e:
+        sys.exit("❌ Timeout error occurred:", e)
+    except TooManyRedirects as e:
+        sys.exit("❌ Too many redirects occurred:", e)
+    except RequestException as e:
+        sys.exit("❌ An error occurred:", e)
+
+
 #   dictmacker() returns a dictionary in which keys are city names and values are times at the moment.
 def dictmaker() -> dict:
     url = "https://www.timeanddate.com/worldclock/full.html"
-    try:
+    if reqcheck(url):
         response = requests.get(url)
         html_content = response.text
         #   making our soup
@@ -69,17 +90,8 @@ def dictmaker() -> dict:
                 times.append(tag.text)
         worldclock = {key: value for key, value in zip(cities, times)}
         return worldclock
-    #   ERROR HANDLING
-    except HTTPError as e:
-        sys.exit("❌ HTTP error occurred:", e)
-    except ConnectionError as e:
-        sys.exit("❌ Network connection error occurred:", e)
-    except Timeout as e:
-        sys.exit("❌ Timeout error occurred:", e)
-    except TooManyRedirects as e:
-        sys.exit("❌ Too many redirects occurred:", e)
-    except RequestException as e:
-        sys.exit("❌ An error occurred:", e)
+    else:
+        sys.exit("❌ REQERROR")
 
 
 #   timenow function: Scrapes the website and returns worldclock times at the moment:
@@ -87,7 +99,7 @@ def timenow(city: str) -> str:
     final_key = ""
     tmp_dict = dictmaker()
     for key, value in tmp_dict.items():
-        if city.capitalize() in key:
+        if city.capitalize() == key.replace(" *", ""):
             final_key = key
             break
         else:
@@ -141,8 +153,9 @@ def city_finder(city: str) -> str:
 
 #   say function: A text-to-speech function built with pyttsx3:
 def say(text: str):
+    #    final_text = f"It is {city_time} in {city_name.replace('*', '')}."
     engine = pyttsx3.init()
-    engine.say(f"It is {text} in {city_name.replace('*', '')}.")
+    engine.say(final_text)
     engine.runAndWait()
 
 

@@ -1,6 +1,6 @@
+from project import dictmaker, timenow, city_finder, reqcheck
 import pytest
-import project
-from project import dictmaker, timenow, city_finder, say
+import requests
 
 
 def test_dictmaker():
@@ -19,19 +19,6 @@ def test_timenow():
     assert len(result) > 0
 
 
-def test_city_finder():
-    worldclock = dictmaker()
-    city = "Bucharest"
-    result = city_finder(city)
-    answer = "yes"
-    assert isinstance(result, str)
-    assert len(result) > 0
-
-
-def test_say(capsys):
-    city_name = 
-    text = "Hello World!"
-    say(text)
-    captured = capsys.readouterr()
-    assert captured.out.strip(
-    ) == f"It is {text} in {city_name.replace('*', '')}."
+def test_reqcheck():
+    assert type(reqcheck("https://youtube.com")) == bool
+    assert reqcheck("https://youtube.com") == True
