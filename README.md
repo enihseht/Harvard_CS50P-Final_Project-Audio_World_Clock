@@ -1,7 +1,4 @@
   # Audio World Clock
-    #### Video Demo:  <URL HERE>
-    #### Description:
-    World Clock Scraper
 
 The World Clock Scraper is a Python program developed as part of the CS50 Introduction to Python Programming course. It scrapes a website to extract real-time world clock information, creates a dictionary of city names and their corresponding times, and provides the option to display the information in text format or with audio output using text-to-speech.
 Features
